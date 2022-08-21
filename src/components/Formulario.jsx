@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { Error } from "./Error";
 
-export const Formulario = ({ pacientes, setPacientes, paciente }) => {
+export const Formulario = ({
+  pacientes,
+  setPacientes,
+  paciente,
+  setPaciente,
+}) => {
   const [nombre, setNombre] = useState("");
   const [propietario, setPropietario] = useState("");
   const [email, setEmail] = useState("");
@@ -10,7 +15,13 @@ export const Formulario = ({ pacientes, setPacientes, paciente }) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log(paciente);
+    if (Object.keys(paciente).length > 0) {
+      setNombre(paciente.nombre);
+      setPropietario(paciente.propietario);
+      setEmail(paciente.email);
+      setFecha(paciente.fecha);
+      setSintomas(paciente.sintomas);
+    }
   }, [paciente]);
 
   const generarId = () => {
@@ -36,10 +47,20 @@ export const Formulario = ({ pacientes, setPacientes, paciente }) => {
       email,
       fecha,
       sintomas,
-      id: generarId(),
     };
 
-    setPacientes([...pacientes, nuevoPaciente]);
+    if (paciente.id) {
+      nuevoPaciente.id = paciente.id;
+      const pacientesActualizados = pacientes.map((prevPaciente) =>
+        prevPaciente.id === paciente.id ? nuevoPaciente : prevPaciente
+      );
+
+      setPacientes(pacientesActualizados);
+      setPaciente([]);
+    } else {
+      nuevoPaciente.id = generarId();
+      setPacientes([...pacientes, nuevoPaciente]);
+    }
 
     setNombre("");
     setPropietario("");
@@ -141,7 +162,7 @@ export const Formulario = ({ pacientes, setPacientes, paciente }) => {
             htmlFor="sintomas"
             className="block text-gray-700 uppercase font-bold"
           >
-            Alta
+            Sintomas
           </label>
           <textarea
             type="date"
@@ -155,7 +176,7 @@ export const Formulario = ({ pacientes, setPacientes, paciente }) => {
 
         <input
           type="submit"
-          value="Agregar Paciente"
+          value={paciente.id ? "Editar Paciente" : "Nuevo Paciente"}
           className="bg-violet-600 w-full p-3 text-white rounded-md uppercase font-bold hover:bg-violet-700 cursor-pointer transition duration-300"
         />
       </form>

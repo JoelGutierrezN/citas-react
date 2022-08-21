@@ -1,10 +1,15 @@
 import { useEffect } from "react";
 import { Paciente } from "./Paciente";
 
-export const ListadoPacientes = ({ pacientes, setPaciente }) => {
+export const ListadoPacientes = ({
+  pacientes,
+  setPaciente,
+  eliminarPaciente,
+}) => {
   useEffect(() => {
     if (pacientes.length > 0) console.log("Nuevo Paciente");
   }, [pacientes]);
+
   return (
     <div className="w-11/12 mx-auto md:w-3/5 md:h-screen overflow-y-scroll">
       {pacientes && pacientes.length ? (
@@ -21,6 +26,7 @@ export const ListadoPacientes = ({ pacientes, setPaciente }) => {
               paciente={paciente}
               key={paciente.id}
               setPaciente={setPaciente}
+              eliminarPaciente={eliminarPaciente}
             />
           ))}
         </>
